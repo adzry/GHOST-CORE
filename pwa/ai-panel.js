@@ -1,53 +1,49 @@
-// ai-panel.js — GHOSS Elite AI Panel with Gemini Hook
+const panel = document.createElement('div');
+panel.style.position = 'fixed';
+panel.style.bottom = '20px';
+panel.style.right = '20px';
+panel.style.width = '340px';
+panel.style.padding = '15px';
+panel.style.background = '#0d1117';
+panel.style.color = '#fff';
+panel.style.borderRadius = '12px';
+panel.style.boxShadow = '0 0 12px rgba(0,0,0,0.4)';
+panel.style.zIndex = 9999;
+panel.style.fontFamily = 'sans-serif';
 
-document.addEventListener("DOMContentLoaded", () => {
-  const panel = document.createElement("div");
-  panel.style = `
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: #0d1117;
-    border: 2px solid #0057ff;
-    border-radius: 12px;
-    padding: 16px;
-    max-width: 320px;
-    color: #fff;
-    font-family: monospace;
-    box-shadow: 0 0 15px rgba(0,0,0,0.3);
-    z-index: 9999;
-  `;
+panel.innerHTML = `
+  <h3 style="margin-top: 0; color: #58a6ff;">🧠 GHOSS AI Panel</h3>
+  <input id="aiInput" placeholder="Ask GHOSS..." 
+    style="width: 100%; padding: 8px; border-radius: 6px; border: none; margin-bottom: 8px; background: #1e1e1e; color: white;" />
+  <button id="aiSend" style="width: 100%; padding: 8px; background: #238636; color: #fff; border: none; border-radius: 6px; cursor: pointer;">🔍 Send</button>
+  <div id="aiOutput" style="margin-top: 10px; max-height: 160px; overflow-y: auto; font-size: 14px;"></div>
+`;
 
-  panel.innerHTML = `
-    <div style="margin-bottom: 10px; font-weight: bold;">💬 GHOSS AI</div>
-    <textarea id="ghoss-input" placeholder="Ask something..." rows="3" style="width: 100%; padding: 8px; border-radius: 6px; border: none;"></textarea>
-    <button id="ghoss-send" style="margin-top: 8px; width: 100%; padding: 8px; background: #0057ff; color: #fff; border: none; border-radius: 6px;">Send</button>
-    <div id="ghoss-output" style="margin-top: 12px; font-size: 0.9em;"></div>
-  `;
+document.body.appendChild(panel);
 
-  document.body.appendChild(panel);
+document.getElementById('aiSend').addEventListener('click', async () => {
+  const input = document.getElementById('aiInput').value.trim();
+  const output = document.getElementById('aiOutput');
+  if (!input) return;
 
-  document.getElementById("ghoss-send").onclick = async () => {
-    const input = document.getElementById("ghoss-input").value.trim();
-    const output = document.getElementById("ghoss-output");
+  output.innerHTML = `<em>🌀 GHOSS thinking...</em>`;
 
-    if (!input) return;
-
-    output.innerHTML = "⏳ Thinking...";
-
-    try {
-      const res = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=YOUR_GEMINI_API_KEY", {
+  try {
+    const res = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyA9UHmUYGKlIxWqYdnJ6GPCgUpgFUP7mz0",
+      {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: input }] }]
-        })
-      });
+          contents: [{ parts: [{ text: input }] }],
+        }),
+      }
+    );
 
-      const data = await res.json();
-      const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "⚠️ No response received.";
-      output.innerHTML = reply;
-    } catch (e) {
-      output.innerHTML = "❌ Error: " + e.message;
-    }
-  };
+    const json = await res.json();
+    const reply = json.candidates?.[0]?.content?.parts?.[0]?.text || "(no response)";
+    output.innerHTML = `<strong>🤖 GHOSS:</strong><br>${reply}`;
+  } catch (err) {
+    output.innerHTML = `<span style="color: red;">❌ Error:</span> ${err.message}`;
+  }
 });

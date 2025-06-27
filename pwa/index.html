@@ -10,36 +10,79 @@
     body {
       font-family: sans-serif;
       padding: 2em;
+      margin: 0;
       background: #fff;
       color: #111;
-      max-width: 480px;
-      margin: auto;
+      transition: background 0.3s, color 0.3s;
     }
+
+    body.dark {
+      background: #0d1117;
+      color: #f4f4f4;
+    }
+
     h1 {
       color: #0057ff;
-      font-weight: bold;
-      font-size: 1.5em;
     }
-    p {
+
+    .toggle {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
+    .ai-panel {
+      margin-top: 2em;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
       font-size: 1em;
-      margin-top: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1em;
+      background: #0057ff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #response {
+      margin-top: 1em;
+      white-space: pre-wrap;
+      font-family: monospace;
+      padding: 1em;
+      background: rgba(0,0,0,0.05);
+      border-radius: 5px;
     }
   </style>
 </head>
 <body>
+  <button class="toggle" onclick="document.body.classList.toggle('dark')">🌙 Toggle Dark</button>
+
   <h1>GHOSS AI Viewer</h1>
   <p>Mobile interface is active. Firebase + GitHub connected.</p>
 
+  <div class="ai-panel">
+    <input type="text" id="userInput" placeholder="Ask GHOSS something..."/>
+    <button onclick="submitPrompt()">Run</button>
+    <div id="response">Waiting for your question...</div>
+  </div>
+
+  <script src="ai-panel.js"></script>
   <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('sw.js')
-        .then(() => console.log('✅ Service Worker Registered'))
-        .catch(err => console.error('❌ Service Worker Error', err));
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js")
+        .then(() => console.log("✅ Service Worker Registered"))
+        .catch(err => console.error("SW error:", err));
     }
   </script>
-
-  <!-- Inject AI Panel -->
-  <script src="ai-panel.js"></script>
 </body>
 </html>
