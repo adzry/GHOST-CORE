@@ -1,3 +1,5 @@
+import { db, collection, addDoc } from './firebase.js'; // Ensure firebase.js is correctly placed
+
 const panel = document.createElement('div');
 panel.style.position = 'fixed';
 panel.style.bottom = '20px';
@@ -21,6 +23,19 @@ panel.innerHTML = `
 
 document.body.appendChild(panel);
 
+async function logToFirestore(input, reply) {
+  try {
+    await addDoc(collection(db, "ghoss_logs"), {
+      question: input,
+      response: reply,
+      timestamp: new Date().toISOString()
+    });
+    console.log("🧠 GHOSS log saved to Firebase.");
+  } catch (err) {
+    console.error("❌ Logging failed:", err.message);
+  }
+}
+
 document.getElementById('aiSend').addEventListener('click', async () => {
   const input = document.getElementById('aiInput').value.trim();
   const output = document.getElementById('aiOutput');
@@ -43,6 +58,8 @@ document.getElementById('aiSend').addEventListener('click', async () => {
     const json = await res.json();
     const reply = json.candidates?.[0]?.content?.parts?.[0]?.text || "(no response)";
     output.innerHTML = `<strong>🤖 GHOSS:</strong><br>${reply}`;
+
+    await logToFirestore(input, reply); // ✅ Memory logging enabled
   } catch (err) {
     output.innerHTML = `<span style="color: red;">❌ Error:</span> ${err.message}`;
   }
