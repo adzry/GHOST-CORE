@@ -7,17 +7,39 @@
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#0d1117"/>
   <style>
-    body { font-family: sans-serif; padding: 2em; background: #fff; color: #111; }
-    h1 { color: #0057ff; }
+    body {
+      font-family: sans-serif;
+      padding: 2em;
+      background: #fff;
+      color: #111;
+      max-width: 480px;
+      margin: auto;
+    }
+    h1 {
+      color: #0057ff;
+      font-weight: bold;
+      font-size: 1.5em;
+    }
+    p {
+      font-size: 1em;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
   <h1>GHOSS AI Viewer</h1>
   <p>Mobile interface is active. Firebase + GitHub connected.</p>
+
   <script>
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("sw.js").then(() => console.log("Service Worker Registered"));
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('sw.js')
+        .then(() => console.log('✅ Service Worker Registered'))
+        .catch(err => console.error('❌ Service Worker Error', err));
     }
   </script>
+
+  <!-- Inject AI Panel -->
+  <script src="ai-panel.js"></script>
 </body>
 </html>
