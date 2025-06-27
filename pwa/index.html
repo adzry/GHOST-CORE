@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GHOSS MOBILE</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0d1117"/>
+  <style>
+    body { font-family: sans-serif; padding: 2em; background: #fff; color: #111; }
+    h1 { color: #0057ff; }
+  </style>
+</head>
+<body>
+  <h1>GHOSS AI Viewer</h1>
+  <p>Mobile interface is active. Firebase + GitHub connected.</p>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js").then(() => console.log("Service Worker Registered"));
+    }
+  </script>
+</body>
+</html>
